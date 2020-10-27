@@ -1,3 +1,19 @@
+FFmpeg Patch 27.10.2020
+=============
+
+Patch Proposed by Francisco Maia.
+
+FFmpeg being over enthusiastic.
+
+The hardware requires an alignment to 16 lines under some conditions, even if the number of active pixels within the buffer is lower than that.
+
+The video codecs are a prime example of that as they work on macroblocks of 16x16. The selection api is then used to define the number of active pixels.
+
+1080 is not a multiple of 16, so it is rounded up to 1088 lines.
+1920*1080*2 (yuyv is 16bpp) = 4147200
+1920*1088*2 = 4177920
+A bigger buffer is sufficient to carry the image described, but ffmpeg uses = instead of >=, and complains.
+
 FFmpeg README
 =============
 
